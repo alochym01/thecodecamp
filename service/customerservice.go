@@ -1,10 +1,14 @@
 package service
 
-import "github.com/alochym01/thecodecamp/domain"
+import (
+	"github.com/alochym01/thecodecamp/domain"
+	"github.com/alochym01/thecodecamp/errs"
+)
 
 // CustomerService ...
 type CustomerService interface {
-	GetAllCustomer() ([]domain.Customer, error)
+	GetAllCustomer() ([]domain.Customer, *errs.AppErrs)
+	GetCustomerByID(string) (*domain.Customer, *errs.AppErrs)
 }
 
 // DefaultCustomerService ...
@@ -13,11 +17,17 @@ type DefaultCustomerService struct {
 }
 
 // GetAllCustomer ...
-func (cs DefaultCustomerService) GetAllCustomer() ([]domain.Customer, error) {
+func (cs DefaultCustomerService) GetAllCustomer() ([]domain.Customer, *errs.AppErrs) {
 	return cs.repo.FindAll()
 }
 
-func NewCustomerService(customerRepo domain.CustomerRepository) DefaultCustomerService {
+// GetCustomer ...
+func (cs DefaultCustomerService) GetCustomerByID(id string) (*domain.Customer, *errs.AppErrs) {
+	return cs.repo.ByID(id)
+}
+
+// NewCustomerService ...
+func NewCustomerService(customerRepo domain.CustomerRepository) CustomerService {
 	return DefaultCustomerService{
 		repo: customerRepo,
 	}

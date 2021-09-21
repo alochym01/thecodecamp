@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/alochym01/thecodecamp/errs"
+
 // Customer tables
 type Customer struct {
 	ID       string
@@ -11,5 +13,6 @@ type Customer struct {
 
 // CustomerRepository ...
 type CustomerRepository interface {
-	FindAll() ([]Customer, error)
+	FindAll() ([]Customer, *errs.AppErrs)
+	ByID(string) (*Customer, *errs.AppErrs)
 }

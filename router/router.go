@@ -25,7 +25,8 @@ func Start(db *sql.DB) {
 	cHandler := handlers.CustomerHandler{
 		Service: service.NewCustomerService(domain.NewUserRepositoryDB(db)),
 	}
-	router.HandleFunc("/customer", cHandler.GetAllCustomers).Methods(http.MethodGet)
+	router.HandleFunc("/customer", cHandler.GetAllCustomer).Methods(http.MethodGet)
+	router.HandleFunc("/customer/{customer_id:[0-9]+}", cHandler.GetCustomerByID).Methods(http.MethodGet)
 
 	fmt.Println("App start 8080")
 	log.Fatal(http.ListenAndServe(":8080", router))
