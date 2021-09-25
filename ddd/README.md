@@ -217,4 +217,6 @@
 	   return nil, errors.New("Email Not Found")
    }
    ```
-3.
+## Reference
+1. Data in Form - <https://github.com/monoculum/formam>
+2. <https://github.com/gin-gonic/gin#bind-form-data-request-with-custom-struct>
