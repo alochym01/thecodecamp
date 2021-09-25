@@ -3,7 +3,7 @@ package users
 // UserServiceRepo defined all methods for service implementation
 type UserServiceRepo interface {
 	GetUsers() ([]User, error)
-	GetUserByEmail(email string) (*User, error)
+	GetUserByEmail(email string) (*Response, error)
 }
 
 // UserService object which implementing all methods in UserServiceRepo
@@ -17,12 +17,20 @@ func (u UserService) GetUsers() ([]User, error) {
 }
 
 // GetUserByEmail ...
-func (u UserService) GetUserByEmail(email string) (*User, error) {
-	return u.uRepo.ByEmail(email)
+func (u UserService) GetUserByEmail(email string) (*Response, error) {
+	// return u.uRepo.ByEmail(email)
+	result, err := u.uRepo.ByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	// temp := Response{}.DTO(*result)
+	temp := result.DTOResponse()
+	return temp, nil
 }
 
-// NewUserService return a UserServiceRepo
-func NewUserService(uRepo Repository) UserServiceRepo {
+// NewService return a UserServiceRepo
+func NewService(uRepo Repository) UserServiceRepo {
 	return &UserService{
 		uRepo: uRepo,
 	}

@@ -41,8 +41,8 @@ func (u UserHandler) GetUserByEmail(c *gin.Context) {
 	})
 }
 
-// NewUserHandler return a UserServiceRepo
-func NewUserHandler(uRepo UserServiceRepo) *UserHandler {
+// NewHandler return a UserServiceRepo
+func NewHandler(uRepo UserServiceRepo) *UserHandler {
 	return &UserHandler{
 		us: uRepo,
 	}

@@ -11,10 +11,8 @@ func Router() *gin.Engine {
 	router := gin.Default()
 
 	uRepo := memory.NewRepository()
-	// uSVCRepo := service.NewUserService(uRepo)
-	// uHandler := handlers.NewUserHandler(uSVCRepo)
-	uSVCRepo := users.NewUserService(uRepo)
-	uHandler := users.NewUserHandler(uSVCRepo)
+	uSVCRepo := users.NewService(uRepo)
+	uHandler := users.NewHandler(uSVCRepo)
 	router.GET("/users", uHandler.GetUsers)
 	router.GET("/users/:email", uHandler.GetUserByEmail)
 
