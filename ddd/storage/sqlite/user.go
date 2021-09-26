@@ -51,7 +51,6 @@ func (u Repository) FindAll() ([]users.User, error) {
 		temp = append(temp, c)
 	}
 	return temp, nil
-
 }
 
 // ByEmail ...

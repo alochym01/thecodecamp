@@ -203,124 +203,125 @@
 ### Server Side
 1. Implementing the [Models Object Interface](#models-object-interface)
    1. `storage/memory/user.go`
-   ```go
-   package memory
+	   ```go
+	   package memory
 
-   import (
-	   "errors"
+	   import (
+		   "errors"
 
-	   "github.com/alochym01/thecodecamp_1/domain/users"
-   )
+		   "github.com/alochym01/thecodecamp_1/domain/users"
+	   )
 
-   var temp = []users.User{
-	   {ID: "1000", Email: "hadn4@fpt.com.vn", Password: "Alochym@123", Role: "Husband", Status: "1"},
-	   {ID: "1002", Email: "nhuntt@fpt.com.vn", Password: "Alochym@123", Role: "Wife", Status: "1"},
-   }
-
-   // Repository is storage on memory and Repository is implemented all method of users.UserRepo
-   type Repository struct {
-	   users []users.User
-   }
-
-   // NewRepository return a users.Repository interface
-   func NewRepository() users.Repository {
-	   return &Repository{
-		   users: temp,
+	   var temp = []users.User{
+		   {ID: "1000", Email: "hadn4@fpt.com.vn", Password: "Alochym@123", Role: "Husband", 	Status: "1"},
+		   {ID: "1002", Email: "nhuntt@fpt.com.vn", Password: "Alochym@123", Role: "Wife", Status: 	"1"},
 	   }
-   }
 
-   // FindAll ...
-   func (u Repository) FindAll() ([]users.User, error) {
-	return u.users, nil
-   }
+	   // Repository is storage on memory and Repository is implemented all method of users.	UserRepo
+	   type Repository struct {
+		   users []users.User
+	   }
 
-   // ByEmail ...
-   func (u Repository) ByEmail(email string) (*users.User, error) {
-	   // user, err := u.db.QueryRow("select * from users where email=?", email)
-	   for i := range temp {
-		   if temp[i].Email == email {
-			   return &temp[i], nil
+	   // NewRepository return a users.Repository interface
+	   func NewRepository() users.Repository {
+		   return &Repository{
+			   users: temp,
 		   }
 	   }
-	   return nil, errors.New("Email Not Found")
-   }
-   ```
+
+	   // FindAll ...
+	   func (u Repository) FindAll() ([]users.User, error) {
+		return u.users, nil
+	   }
+
+	   // ByEmail ...
+	   func (u Repository) ByEmail(email string) (*users.User, error) {
+		   // user, err := u.db.QueryRow("select * from users where email=?", email)
+		   for i := range temp {
+			   if temp[i].Email == email {
+				   return &temp[i], nil
+			   }
+		   }
+		   return nil, errors.New("Email Not Found")
+	   }
+	   ```
    2. `storage/sqlite/user.go`
-   ```go
-   import (
-   	"database/sql"
-   	"fmt"
+		```go
+		package sqlite
 
-   	"github.com/alochym01/thecodecamp_1/domain/users"
-   )
+		import (
+		   	"database/sql"
+		   	"fmt"
 
-   // Repository is storage on sqlite and Repository is implemented all method of users.UserRepo
-   type Repository struct {
-   	db *sql.DB
-   }
+		   	"github.com/alochym01/thecodecamp_1/domain/users"
+		)
 
-   // NewRepository return a domain.UserRepo
-   func NewRepository(db *sql.DB) users.Repository {
-   	return &Repository{
-   		db: db,
-   	}
-   }
+		// Repository is storage on sqlite and Repository is implemented all method of users.		UserRepo
+		type Repository struct {
+		   	db *sql.DB
+		}
 
-   // FindAll ...
-   func (u Repository) FindAll() ([]users.User, error) {
-   	sqlstmt := "select * from users"
+		// NewRepository return a domain.UserRepo
+		func NewRepository(db *sql.DB) users.Repository {
+		   	return &Repository{
+		   		db: db,
+		   	}
+	    }
 
-   	rows, err := u.db.Query(sqlstmt)
+		// FindAll ...
+		func (u Repository) FindAll() ([]users.User, error) {
+		   	sqlstmt := "select * from users"
 
-   	// check err from server DB and Query DB
-   	if err != nil {
-   		fmt.Println("Server Err", err.Error())
-   		// return nil, errs.NewServerError(err.Error())
-   	}
+		   	rows, err := u.db.Query(sqlstmt)
 
-   	temp := []users.User{}
-   	// users := make([]users.User, 0)
+		   	// check err from server DB and Query DB
+		   	if err != nil {
+		   		fmt.Println("Server Err", err.Error())
+		   		// return nil, errs.NewServerError(err.Error())
+		   	}
 
-   	for rows.Next() {
-   		c := users.User{}
-   		err := rows.Scan(&c.ID, &c.Email, &c.Password, &c.Role, &c.Status)
-   		// check err from server DB and Scan function
-   		if err != nil {
-   			if err == sql.ErrNoRows {
-   				fmt.Println("Not Found", err.Error())
-   				// return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
-   				return nil, err
-   			}
-   			fmt.Println("Server Err", err.Error())
-   			// return nil, errs.NewServerError("Server Error")
-   			return nil, err
-   		}
-   		temp = append(temp, c)
-   	}
-   	return temp, nil
+		   	temp := []users.User{}
+		   	// users := make([]users.User, 0)
 
-   }
+		   	for rows.Next() {
+		   		c := users.User{}
+		   		err := rows.Scan(&c.ID, &c.Email, &c.Password, &c.Role, &c.Status)
+		   		// check err from server DB and Scan function
+		   		if err != nil {
+		   			if err == sql.ErrNoRows {
+		   				fmt.Println("Not Found", err.Error())
+		   				// return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
+		   				return nil, err
+		   			}
+		   			fmt.Println("Server Err", err.Error())
+		   			// return nil, errs.NewServerError("Server Error")
+		   			return nil, err
+		   		}
+		   		temp = append(temp, c)
+		   	}
+		   	return temp, nil
+		}
 
-   // ByEmail ...
-   func (u Repository) ByEmail(email string) (*users.User, error) {
-   	sqlstmt := "select * from users where email=?"
-   	row := u.db.QueryRow(sqlstmt, email)
-   	c := users.User{}
-   	err := row.Scan(&c.ID, &c.Email, &c.Password, &c.Role, &c.Status)
-   	if err != nil {
-   		if err == sql.ErrNoRows {
-   			fmt.Println("Not Found", err.Error())
-   			return nil, err
-   			// return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
-   		}
-   		fmt.Println("Server Err", err.Error())
-   		return nil, err
-   		// return nil, errs.NewServerError(err.Error())
-   	}
+		// ByEmail ...
+		func (u Repository) ByEmail(email string) (*users.User, error) {
+		   	sqlstmt := "select * from users where email=?"
+		   	row := u.db.QueryRow(sqlstmt, email)
+		   	c := users.User{}
+		   	err := row.Scan(&c.ID, &c.Email, &c.Password, &c.Role, &c.Status)
+		   	if err != nil {
+		   		if err == sql.ErrNoRows {
+		   			fmt.Println("Not Found", err.Error())
+		   			return nil, err
+		   			// return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
+		   		}
+		   		fmt.Println("Server Err", err.Error())
+		   		return nil, err
+		   		// return nil, errs.NewServerError(err.Error())
+		   	}
 
-   	return &c, nil
-   }
-   ```
+		   	return &c, nil
+		}
+		```
 4.
 ## Reference
 1. Data in Form - <https://github.com/monoculum/formam>
