@@ -1,9 +1,11 @@
 package users
 
+import "github.com/alochym01/thecodecamp_1/errs"
+
 // UserServiceRepo defined all methods for service implementation
 type UserServiceRepo interface {
-	GetUsers() ([]User, error)
-	GetUserByEmail(email string) (*Response, error)
+	GetUsers() ([]User, *errs.AppErrs)
+	GetUserByEmail(email string) (*Response, *errs.AppErrs)
 }
 
 // UserService object which implementing all methods in UserServiceRepo
@@ -12,12 +14,12 @@ type UserService struct {
 }
 
 // GetUsers ...
-func (u UserService) GetUsers() ([]User, error) {
+func (u UserService) GetUsers() ([]User, *errs.AppErrs) {
 	return u.uRepo.FindAll()
 }
 
 // GetUserByEmail ...
-func (u UserService) GetUserByEmail(email string) (*Response, error) {
+func (u UserService) GetUserByEmail(email string) (*Response, *errs.AppErrs) {
 	// return u.uRepo.ByEmail(email)
 	result, err := u.uRepo.ByEmail(email)
 	if err != nil {
