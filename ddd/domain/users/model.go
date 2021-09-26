@@ -1,5 +1,7 @@
 package users
 
+import "github.com/alochym01/thecodecamp_1/errs"
+
 // User domain table
 type User struct {
 	ID       string `json:"id"`
@@ -30,8 +32,10 @@ func (u User) DTOResponse() *Response {
 
 // Repository defined all methods for storage implementation
 type Repository interface {
-	FindAll() ([]User, error)
-	ByEmail(email string) (*User, error)
+	// FindAll() ([]User, error)
+	// ByEmail(email string) (*User, error)
+	FindAll() ([]User, *errs.AppErrs)
+	ByEmail(email string) (*User, *errs.AppErrs)
 }
 
 // Request is using for Data Transform Object - DTO.
@@ -64,7 +68,6 @@ func (res Response) DTO(u User) *Response {
 
 // statusToText converting number to string
 func (u User) statusToText() string {
-
 	if u.Status == "1" {
 		return "Active"
 	}

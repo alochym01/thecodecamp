@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/alochym01/thecodecamp_1/domain/users"
+	"github.com/alochym01/thecodecamp_1/errs"
 )
 
 // Repository is storage on sqlite and Repository is implemented all method of users.UserRepo
@@ -20,15 +21,17 @@ func NewRepository(db *sql.DB) users.Repository {
 }
 
 // FindAll ...
-func (u Repository) FindAll() ([]users.User, error) {
+func (u Repository) FindAll() ([]users.User, *errs.AppErrs) {
 	sqlstmt := "select * from users"
 
 	rows, err := u.db.Query(sqlstmt)
+	// rows.NextResultSet() // is false if there is no rows
 
 	// check err from server DB and Query DB
 	if err != nil {
 		fmt.Println("Server Err", err.Error())
-		// return nil, errs.NewServerError(err.Error())
+		return nil, errs.NewServerError(err.Error())
+
 	}
 
 	temp := []users.User{}
@@ -39,14 +42,8 @@ func (u Repository) FindAll() ([]users.User, error) {
 		err := rows.Scan(&c.ID, &c.Email, &c.Password, &c.Role, &c.Status)
 		// check err from server DB and Scan function
 		if err != nil {
-			if err == sql.ErrNoRows {
-				fmt.Println("Not Found", err.Error())
-				// return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
-				return nil, err
-			}
 			fmt.Println("Server Err", err.Error())
-			// return nil, errs.NewServerError("Server Error")
-			return nil, err
+			return nil, errs.NewServerError(err.Error())
 		}
 		temp = append(temp, c)
 	}
@@ -54,7 +51,7 @@ func (u Repository) FindAll() ([]users.User, error) {
 }
 
 // ByEmail ...
-func (u Repository) ByEmail(email string) (*users.User, error) {
+func (u Repository) ByEmail(email string) (*users.User, *errs.AppErrs) {
 	sqlstmt := "select * from users where email=?"
 	row := u.db.QueryRow(sqlstmt, email)
 	c := users.User{}
@@ -62,12 +59,10 @@ func (u Repository) ByEmail(email string) (*users.User, error) {
 	if err != nil {
 		if err == sql.ErrNoRows {
 			fmt.Println("Not Found", err.Error())
-			return nil, err
-			// return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
+			return nil, errs.NewNotFoundError(sql.ErrNoRows.Error())
 		}
 		fmt.Println("Server Err", err.Error())
-		return nil, err
-		// return nil, errs.NewServerError(err.Error())
+		return nil, errs.NewServerError(err.Error())
 	}
 
 	return &c, nil

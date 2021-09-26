@@ -1,9 +1,8 @@
 package memory
 
 import (
-	"errors"
-
 	"github.com/alochym01/thecodecamp_1/domain/users"
+	"github.com/alochym01/thecodecamp_1/errs"
 )
 
 var temp = []users.User{
@@ -24,7 +23,7 @@ func NewRepository() users.Repository {
 }
 
 // FindAll ...
-func (u Repository) FindAll() ([]users.User, error) {
+func (u Repository) FindAll() ([]users.User, *errs.AppErrs) {
 	// result, err := u.db.Query("select * from users")
 	// if err != nil {
 	// 	return nil, err
@@ -35,12 +34,12 @@ func (u Repository) FindAll() ([]users.User, error) {
 }
 
 // ByEmail ...
-func (u Repository) ByEmail(email string) (*users.User, error) {
+func (u Repository) ByEmail(email string) (*users.User, *errs.AppErrs) {
 	// user, err := u.db.QueryRow("select * from users where email=?", email)
 	for i := range temp {
 		if temp[i].Email == email {
 			return &temp[i], nil
 		}
 	}
-	return nil, errors.New("Email Not Found")
+	return nil, errs.NewNotFoundError("Not Found")
 }
