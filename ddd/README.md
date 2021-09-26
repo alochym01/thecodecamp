@@ -6,34 +6,35 @@
 1. Folder structure
 	```bash
     ├── cmd
-	│   ├── api
-	│   │   └── main.go
-	│   └── web
-	├── domain
-	│   └── users
-	│       ├── handler.go
-	│       ├── model.go
-	│       └── service.go
-	├── errs
-	├── go.mod
-	├── go.sum
-	├── router
-	│   └── router.go
-	└── storage
-    	├── memcached
-	    │   └── user.go
-    	├── memory
-	    │   └── user.go
-    	├── mysql
-	    │   └── user.go
-	    ├── postgres
-    	├── redis
-	    │   └── user.go
-	    └── sqlite
-    	    └── user.go
+    │   ├── api
+    │   │   └── main.go
+    │   └── web
+    ├── domain
+    │   └── users
+    │       ├── handler.go
+    │       ├── model.go
+    │       └── service.go
+    ├── errs
+    ├── foo.db
+    ├── go.mod
+    ├── go.sum
+    ├── README.md
+    ├── router
+    │   └── router.go
+    └── storage
+        ├── memcached
+        │   └── user.go
+        ├── memory
+        │   └── user.go
+        ├── mysql
+        ├── postgres
+        ├── redis
+        │   └── user.go
+        └── sqlite
+            └── user.go
     ```
 2. Explain
-	1. 'cmd/api/main` is used for web api
+	1. `cmd/api/main` is used for web api
 	2. `domain`
 	   - `users` is an object is an object which doing business logic on it
 	   	 - `handler.go`
@@ -193,8 +194,8 @@
 	   })
    }
 
-   // NewUserHandler return a UserServiceRepo
-   func NewUserHandler(uRepo UserServiceRepo) *UserHandler {
+   // NewHandler return a UserServiceRepo
+   func NewHandler(uRepo UserServiceRepo) *UserHandler {
 	   return &UserHandler{
 		   us: uRepo,
 	   }
@@ -213,11 +214,11 @@
 	   )
 
 	   var temp = []users.User{
-		   {ID: "1000", Email: "hadn4@fpt.com.vn", Password: "Alochym@123", Role: "Husband", 	Status: "1"},
+		   {ID: "1000", Email: "hadn4@fpt.com.vn", Password: "Alochym@123", Role: "Husband", Status: "1"},
 		   {ID: "1002", Email: "nhuntt@fpt.com.vn", Password: "Alochym@123", Role: "Wife", Status: 	"1"},
 	   }
 
-	   // Repository is storage on memory and Repository is implemented all method of users.	UserRepo
+	   // Repository is storage on memory and Repository is implemented all method of users.UserRepo
 	   type Repository struct {
 		   users []users.User
 	   }
@@ -256,7 +257,7 @@
 		   	"github.com/alochym01/thecodecamp_1/domain/users"
 		)
 
-		// Repository is storage on sqlite and Repository is implemented all method of users.		UserRepo
+		// Repository is storage on sqlite and Repository is implemented all method of users.UserRepo
 		type Repository struct {
 		   	db *sql.DB
 		}

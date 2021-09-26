@@ -38,10 +38,10 @@ type Repository interface {
 // As converting data for create user request in form data
 // https://github.com/gin-gonic/gin#bind-form-data-request-with-custom-struct
 type Request struct {
-	Email    string `form:"email"`
-	Password string `form:"password"`
-	Role     string `form:"role"`
-	Status   string `form:"status"`
+	Email    string `form:"email" json:"email"`
+	Password string `form:"password" json:"password"`
+	Role     string `form:"role" json:"role"`
+	Status   string `form:"status" json:"status"`
 }
 
 // Response is using for Data Transform Object - DTO. As a response to request
