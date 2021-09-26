@@ -1,5 +1,6 @@
 # Golang Rest API
 ## Hexagonal Architecture
+![alt text for screen readers](./hexagonal-architechture.jpg "Text to show on mouseover").
 ### User Side
 1. Request HTTP web server
 ### Domain
